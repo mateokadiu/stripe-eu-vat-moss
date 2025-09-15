@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-snapshots
+      author: mk
+      comment: aggregate snapshot table for replay performance
+      changes:
+        - createTable:
+            tableName: snapshots
+            columns:
+              - column:
+                  name: aggregate_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: aggregate_type
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: state
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: taken_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_snapshots_type
+            tableName: snapshots
+            columns:
+              - column:
+                  name: aggregate_type

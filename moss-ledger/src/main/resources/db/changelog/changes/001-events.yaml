@@ -1,0 +1,87 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-events
+      author: mk
+      comment: append-only events table with bitemporal valid/transaction-time columns
+      changes:
+        - createTable:
+            tableName: events
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: aggregate_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: aggregate_type
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_type
+                  type: varchar(96)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payload
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: metadata
+                  type: jsonb
+              - column:
+                  name: valid_time_from
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: valid_time_to
+                  type: timestamptz
+              - column:
+                  name: transaction_time_from
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_time_to
+                  type: timestamptz
+              - column:
+                  name: recorded_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_events_agg
+            tableName: events
+            columns:
+              - column:
+                  name: aggregate_type
+              - column:
+                  name: aggregate_id
+              - column:
+                  name: version
+        - createIndex:
+            indexName: idx_events_valid_time
+            tableName: events
+            columns:
+              - column:
+                  name: valid_time_from
+              - column:
+                  name: valid_time_to
+        - addUniqueConstraint:
+            constraintName: uq_events_agg_version
+            tableName: events
+            columnNames: aggregate_id, version
