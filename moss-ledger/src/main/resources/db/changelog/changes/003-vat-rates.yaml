@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-vat-rates-table
+      author: mk
+      comment: 27-country EU VAT standard rate matrix with effective-from dates
+      changes:
+        - createTable:
+            tableName: vat_rates
+            columns:
+              - column:
+                  name: country_code
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rate_type
+                  type: varchar(16)
+                  remarks: STANDARD | REDUCED | SUPER_REDUCED
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rate_basis_points
+                  type: integer
+                  remarks: rate in basis points (e.g. 1900 = 19.00%)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: effective_from
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: effective_to
+                  type: date
+              - column:
+                  name: source_note
+                  type: varchar(256)
+        - addPrimaryKey:
+            tableName: vat_rates
+            columnNames: country_code, rate_type, effective_from
+            constraintName: pk_vat_rates
+        - createIndex:
+            indexName: idx_vat_rates_lookup
+            tableName: vat_rates
+            columns:
+              - column:
+                  name: country_code
+              - column:
+                  name: effective_from
+
+  - changeSet:
+      id: 003-vat-rates-data
+      author: mk
+      comment: standard rates as of 2025-09 + scheduled 2026 changes for FI and LT
+      changes:
+        - sqlFile:
+            path: db/changelog/data/003-vat-rates-eu27.sql
+            relativeToChangelogFile: false
