@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-exchange-rates
+      author: mk
+      comment: ECB euro reference rates cache + per-quarter pinning
+      changes:
+        - createTable:
+            tableName: ecb_rates
+            columns:
+              - column:
+                  name: rate_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_currency
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: to_currency
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rate
+                  type: decimal(20,10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: source
+                  type: varchar(64)
+                  defaultValue: ECB
+              - column:
+                  name: fetched_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+        - addPrimaryKey:
+            tableName: ecb_rates
+            columnNames: rate_date, from_currency, to_currency
+            constraintName: pk_ecb_rates
+
+        - createTable:
+            tableName: quarter_rates
+            columns:
+              - column:
+                  name: period_code
+                  type: varchar(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_currency
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: to_currency
+                  type: varchar(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rate
+                  type: decimal(20,10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: pinned_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+        - addPrimaryKey:
+            tableName: quarter_rates
+            columnNames: period_code, from_currency, to_currency
+            constraintName: pk_quarter_rates
