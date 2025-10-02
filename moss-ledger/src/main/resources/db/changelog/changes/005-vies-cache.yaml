@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-vies-cache
+      author: mk
+      comment: VIES VAT number check results with 24h cache
+      changes:
+        - createTable:
+            tableName: vies_checks
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: country_code
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vat_number
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: valid
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: trader_name
+                  type: varchar(256)
+              - column:
+                  name: trader_address
+                  type: varchar(512)
+              - column:
+                  name: raw_response
+                  type: text
+              - column:
+                  name: checked_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cache_until
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_vies_lookup
+            tableName: vies_checks
+            columns:
+              - column:
+                  name: country_code
+              - column:
+                  name: vat_number
+              - column:
+                  name: cache_until
