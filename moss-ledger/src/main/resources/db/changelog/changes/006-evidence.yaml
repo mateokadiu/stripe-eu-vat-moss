@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-evidence
+      author: mk
+      comment: per-transaction evidence-of-location storage with retention metadata
+      changes:
+        - createTable:
+            tableName: evidence_pieces
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: transaction_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: piece_type
+                  type: varchar(32)
+                  remarks: BILLING_ADDRESS | IP_GEOLOCATION | BANK_LOCATION | MCC_PHONE | CUSTOMER_DECLARED
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country_code
+                  type: varchar(2)
+              - column:
+                  name: source_provider
+                  type: varchar(64)
+              - column:
+                  name: source_raw
+                  type: text
+              - column:
+                  name: observed_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: source_hash
+                  type: varchar(128)
+                  remarks: sha-256 of raw source for retention beyond purge
+              - column:
+                  name: retention_until
+                  type: date
+                  remarks: '10 years after observed_at per EU Directive 2006/112/EC Art. 369k'
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_evidence_tx
+            tableName: evidence_pieces
+            columns:
+              - column:
+                  name: transaction_id
+        - createIndex:
+            indexName: idx_evidence_retention
+            tableName: evidence_pieces
+            columns:
+              - column:
+                  name: retention_until
