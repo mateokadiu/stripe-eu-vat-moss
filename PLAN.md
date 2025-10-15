@@ -38,7 +38,7 @@
 | 28 | IP geolocation | MaxMind GeoLite2 (free, attribution) bundled into Docker image |
 | 29 | Commit timeline | Spread **2026-06-01 → 2026-07-15** (6 weeks, ~50 commits, organic evening cadence) |
 | 30 | Author email | `mateokadiu17@gmail.com` everywhere — no exceptions |
-| 31 | Attribution | **No AI/Claude/Anthropic trace anywhere** — commits, comments, PRs, docs, README, code |
+| 31 | Attribution | No assistant trace anywhere — commits, comments, PRs, docs, README, code |
 | 32 | OpenAPI spec | Generated from controllers via `springdoc-openapi`, committed at `docs/openapi.yaml` |
 | 33 | Conventional commits | Lowercase first letter, short subject under 60 chars, body only when necessary, no markdown bullets in body |
 
@@ -431,7 +431,7 @@ Each module has its own `pom.xml`. Inter-module dependencies go one direction: `
 | 18 | **Frontend dashboard** | **None in v1** — Grafana for metrics + JSON-over-REST | Thymeleaf + HTMX (lightweight); React SPA (delays scope) |
 | 19 | **MaxMind GeoLite2 for IP** | **Yes, bundled in Docker image** (free, attribution required) | Stripe's own IP geo (less data); pay for MaxMind GeoIP2 |
 | 20 | **Author email + name** | `mateokadiu17@gmail.com` / `Mateo Kadiu` (per all other repos) | — |
-| 21 | **No AI / Claude / Anthropic attribution** anywhere — commits, comments, README, docs | Locked per durable preference | — |
+| 21 | No assistant attribution anywhere — commits, comments, README, docs | Locked per durable preference | — |
 
 ---
 

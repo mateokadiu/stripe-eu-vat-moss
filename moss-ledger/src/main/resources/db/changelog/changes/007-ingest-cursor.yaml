@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-ingest-cursor
+      author: mk
+      comment: idempotency + resumable cursors for csv and api ingest paths
+      changes:
+        - createTable:
+            tableName: ingest_cursors
+            columns:
+              - column:
+                  name: cursor_name
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: position
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+
+        - createTable:
+            tableName: seen_tax_transactions
+            columns:
+              - column:
+                  name: tax_transaction_id
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: seen_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
