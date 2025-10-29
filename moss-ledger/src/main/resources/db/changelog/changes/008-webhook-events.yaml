@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-webhook-events
+      author: mk
+      comment: stripe webhook idempotency log
+      changes:
+        - createTable:
+            tableName: webhook_events
+            columns:
+              - column:
+                  name: event_id
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: event_type
+                  type: varchar(96)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payload
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: received_at
+                  type: timestamptz
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false

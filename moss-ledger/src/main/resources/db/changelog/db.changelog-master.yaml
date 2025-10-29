@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/changes/006-evidence.yaml
   - include:
       file: db/changelog/changes/007-ingest-cursor.yaml
+  - include:
+      file: db/changelog/changes/008-webhook-events.yaml
