@@ -29,8 +29,7 @@ class SafOssJaxbRoundtripTest {
                         new BigDecimal("3000.00"),
                         new BigDecimal("20.0"),
                         new BigDecimal("600.00"))))
-            .withCorrections(
-                List.of(new Correction("2026Q1", "FR", new BigDecimal("-450.00"))));
+            .withCorrections(List.of(new Correction("2026Q1", "FR", new BigDecimal("-450.00"))));
 
     JAXBContext ctx = JAXBContext.newInstance(SafOss.class);
     StringWriter writer = new StringWriter();
