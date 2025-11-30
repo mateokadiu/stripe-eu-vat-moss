@@ -1,0 +1,67 @@
+{
+  "title": "stripe-eu-vat-moss",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Returns generated (24h)",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "increase(moss_returns_generated_total[24h])", "refId": "A" }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Late-filing alerts",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "targets": [
+        { "expr": "increase(moss_late_filing_alerts_total[7d])", "refId": "A" }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "VIES — cache vs upstream",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "targets": [
+        { "expr": "rate(moss_vies_cache_hits_total[5m])", "refId": "A", "legendFormat": "cache" },
+        {
+          "expr": "rate(moss_vies_upstream_calls_total[5m])",
+          "refId": "B",
+          "legendFormat": "upstream"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Evidence gaps detected",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "targets": [
+        { "expr": "rate(moss_evidence_gap_detected_total[15m])", "refId": "A" }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Corrections applied",
+      "datasource": "Prometheus",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 12 },
+      "targets": [
+        { "expr": "rate(moss_corrections_applied_total[1h])", "refId": "A" }
+      ]
+    }
+  ]
+}
