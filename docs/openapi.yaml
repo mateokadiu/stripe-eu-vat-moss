@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: stripe-eu-vat-moss
+  description: |
+    REST surface for the EU VAT One-Stop-Shop automation engine. Reads Stripe Tax
+    data, runs EU compliance rules, emits SAF-OSS XML returns. See PLAN.md and
+    docs/compliance-notes.md for the rules encoded.
+  version: 0.1.0
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080
+paths:
+  /ingest/csv:
+    post:
+      summary: Bulk-upload a Stripe itemized Tax CSV export
+      requestBody:
+        required: true
+        content:
+          text/csv:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: ingest accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResult'
+  /ingest/webhook:
+    post:
+      summary: Stripe webhook receiver
+      parameters:
+        - in: header
+          name: Stripe-Signature
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: webhook accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookAck'
+        '400':
+          description: invalid signature or payload
+  /periods/{code}:
+    get:
+      summary: Read the per-MS summary of a reporting period
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]{4}Q[1-4]$'
+      responses:
+        '200':
+          description: summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeriodSummary'
+  /periods/{code}/close:
+    post:
+      summary: Close a period (pins ECB rates, freezes the read model)
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: close scheduled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClosePeriodResult'
+  /periods/{code}/return.xml:
+    get:
+      summary: Download the SAF-OSS return for a closed period
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SAF-OSS XML
+          content:
+            application/xml:
+              schema:
+                type: string
+                format: binary
+components:
+  schemas:
+    IngestResult:
+      type: object
+      properties:
+        accepted:
+          type: integer
+          format: int64
+        deduplicated:
+          type: integer
+          format: int64
+    WebhookAck:
+      type: object
+      properties:
+        status:
+          type: string
+    PeriodSummary:
+      type: object
+      properties:
+        period:
+          type: string
+        totalsPerMs:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerMsTotal'
+        totalVatDue:
+          type: string
+    PerMsTotal:
+      type: object
+      properties:
+        memberState:
+          type: string
+        taxableAmount:
+          type: string
+        vatAmount:
+          type: string
+    ClosePeriodResult:
+      type: object
+      properties:
+        period:
+          type: string
+        status:
+          type: string
