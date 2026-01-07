@@ -1,3 +1,30 @@
+plugins {
+    id("info.solidsoft.pitest")
+}
+
+pitest {
+    targetClasses.set(
+        listOf(
+            "io.github.mateokadiu.moss.enrich.place.*",
+            "io.github.mateokadiu.moss.enrich.currency.*",
+            "io.github.mateokadiu.moss.enrich.evidence.*",
+        ),
+    )
+    targetTests.set(
+        listOf(
+            "io.github.mateokadiu.moss.enrich.place.*",
+            "io.github.mateokadiu.moss.enrich.currency.*",
+            "io.github.mateokadiu.moss.enrich.evidence.*",
+        ),
+    )
+    pitestVersion.set("1.16.0")
+    junit5PluginVersion.set("1.2.1")
+    timestampedReports.set(false)
+    threads.set(4)
+    mutationThreshold.set(70)
+    avoidCallsTo.set(setOf("org.slf4j", "java.util.logging"))
+}
+
 dependencies {
     implementation(project(":moss-shared"))
     implementation(project(":moss-ledger"))
