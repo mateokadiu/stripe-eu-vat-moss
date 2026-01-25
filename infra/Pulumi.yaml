@@ -1,0 +1,8 @@
+name: stripe-eu-vat-moss-infra
+runtime:
+  name: java
+  options:
+    binary: build/libs/infra.jar
+description: |
+  Provisions an Oracle Cloud Always Free Ampere A1 VM running the moss
+  Spring Boot container behind Caddy, with Postgres 16 in a sibling VM.
