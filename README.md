@@ -122,8 +122,8 @@ Every aggregate state event has four time columns:
 The repository supports `loadStreamAsOf(aggregateId, asOf)` which returns the events that were visible at a given transaction time. Replays at the same as-of time always produce the same state.
 
 ```bash
-# Replay the state of a transaction as it was visible on 2026-07-15
-moss audit-replay --tx <uuid> --as-of 2026-07-15T10:00:00Z
+# Replay the state of a transaction as it was visible on 2026-06-17
+moss audit-replay --tx <uuid> --as-of 2026-06-17T10:00:00Z
 ```
 
 </details>
@@ -309,7 +309,7 @@ spec:
 moss ingest-csv --file itemized-export.csv
 moss close-period 2026Q3
 moss generate-return 2026Q3 --out return.xml
-moss audit-replay --tx <uuid> --as-of 2026-07-15T10:00:00Z
+moss audit-replay --tx <uuid> --as-of 2026-06-17T10:00:00Z
 ```
 
 ## Tech stack
