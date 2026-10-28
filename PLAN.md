@@ -38,7 +38,6 @@
 | 28 | IP geolocation | MaxMind GeoLite2 (free, attribution) bundled into Docker image |
 | 29 | Commit timeline | Spread **2026-06-01 → 2026-07-15** (6 weeks, ~50 commits, organic evening cadence) |
 | 30 | Author email | `mateokadiu17@gmail.com` everywhere — no exceptions |
-| 31 | Attribution | No assistant trace anywhere — commits, comments, PRs, docs, README, code |
 | 32 | OpenAPI spec | Generated from controllers via `springdoc-openapi`, committed at `docs/openapi.yaml` |
 | 33 | Conventional commits | Lowercase first letter, short subject under 60 chars, body only when necessary, no markdown bullets in body |
 
@@ -355,7 +354,7 @@ When the period closes, the generator scans all Corrections with `reportingPerio
 | Layer | Choice | Why |
 |---|---|---|
 | Language | **Java 21 LTS** | Pattern matching, records, virtual threads (huge for the VIES + ECB I/O paths) |
-| Framework | **Spring Boot 3.4** | Stripe Java SDK is mature on Spring; JVM = recruiter signal in EU fintech |
+| Framework | **Spring Boot 3.4** | Stripe Java SDK is mature on Spring; JVM is the dominant stack in EU fintech |
 | Modules | **Spring Modulith** | Bounded contexts (`ingest`, `enrich`, `ledger`, `file`, `observe`) with explicit event publication; no premature microservices |
 | Database | **Postgres 16** | Bitemporal columns + JSONB for raw payloads + GIN indexes for evidence search |
 | Migrations | **Liquibase** | Audit-grade migration history; supports change-set comments + rollback |
@@ -414,7 +413,7 @@ Each module has its own `pom.xml`. Inter-module dependencies go one direction: `
 | 1 | **Folder + repo name** | `stripe-eu-vat-moss` | `vat-oss-engine`, `oss-filer`, `moss-engine` |
 | 2 | **License** | **MIT** (matches the rest of the portfolio) | Apache 2.0 (more enterprise-friendly for fintech) |
 | 3 | **Visibility** | **Public** from day 1 | Private until v0.9 |
-| 4 | **JVM language** | **Java 21** | Kotlin 2.0 (faster to write, less recruiter signal in EU fintech) |
+| 4 | **JVM language** | **Java 21** | Kotlin 2.0 (faster to write, less common in EU fintech codebases) |
 | 5 | **Build tool** | **Maven** | Gradle (faster builds but worse semantic-release tooling) |
 | 6 | **Persistence** | **JPA + Hibernate Envers** for entities; **JOOQ** for read-model projections | All-JOOQ (less magic, more boilerplate); all-JPA (slower projections) |
 | 7 | **Event-store style** | **Custom Postgres `events` table** (eugene-khyst pattern) | Axon Server (heavyweight); Kafka (overkill for single-tenant) |
@@ -425,13 +424,12 @@ Each module has its own `pom.xml`. Inter-module dependencies go one direction: `
 | 12 | **Stripe Connect deemed-seller default** | **Off by default** (most users aren't marketplaces); per-tx Stripe-metadata override | On by default; require explicit metadata opt-out |
 | 13 | **Currency strategy** | **Minor units (cents) as `Long`** everywhere; only present as decimal at API edge | BigDecimal everywhere (slower, more allocation) |
 | 14 | **Evidence-piece minimum** | **2 pieces enforced** unless `merchant.smallEnterpriseMode=true` | Always 2; always 1 |
-| 15 | **Deploy story for the README** | **Docker image via Jib + Oracle Cloud Always Free + Pulumi** (matches your portfolio: $0/yr) | Fly.io free; Cloudflare Workers (not JVM-compatible); leave deploy to the user |
+| 15 | **Deploy story for the README** | **Docker image via Jib + Oracle Cloud Always Free + Pulumi** (same setup as my other projects: $0/yr) | Fly.io free; Cloudflare Workers (not JVM-compatible); leave deploy to the user |
 | 16 | **CLI vs REST** | **Both** — REST for live ingest + dashboard; CLI for one-off ops (close-period, generate-return, audit-replay) | REST-only (more dev work for the operator); CLI-only (no good dashboard story) |
 | 17 | **VIES caching duration** | **24 hours** per VIES guidance | 1 hour (safer, more VIES calls); 7 days (faster, risk of stale validity) |
 | 18 | **Frontend dashboard** | **None in v1** — Grafana for metrics + JSON-over-REST | Thymeleaf + HTMX (lightweight); React SPA (delays scope) |
 | 19 | **MaxMind GeoLite2 for IP** | **Yes, bundled in Docker image** (free, attribution required) | Stripe's own IP geo (less data); pay for MaxMind GeoIP2 |
 | 20 | **Author email + name** | `mateokadiu17@gmail.com` / `Mateo Kadiu` (per all other repos) | — |
-| 21 | No assistant attribution anywhere — commits, comments, README, docs | Locked per durable preference | — |
 
 ---
 
@@ -525,7 +523,7 @@ Per security preference: **no credentials in repo, no .env committed**, all secr
 
 ---
 
-## 18. Numbers worth remembering (for the cheat sheet / interview prep)
+## 18. Numbers worth remembering
 
 - **€10,000** — single EU-wide threshold above which destination VAT kicks in
 - **€100,000** — small-enterprise simplification cutoff (1 piece of evidence suffices)
